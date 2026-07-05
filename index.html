@@ -1,23 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Arche System</title>
+<title>ARCHIVE SYSTEM</title>
 
 <style>
 body {
   background: black;
-  color: white;
+  color: #e0e0e0;
   font-family: monospace;
-  padding: 30px;
+  padding: 40px;
 }
-.locked {
-  color: red;
+
+/* 상단 타이틀 */
+h1 {
+  font-size: 28px;
+  color: white;
+  letter-spacing: 3px;
+  margin-bottom: 30px;
 }
+
+/* 선택 버튼 */
 .box {
   border: 1px solid #444;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 15px;
+  margin: 12px 0;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.box:hover {
+  border-color: white;
+  transform: scale(1.02);
+}
+
+.locked {
+  color: #ff3b3b;
+}
+
+/* 내용창 */
+#content {
+  margin-top: 30px;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+  min-height: 200px;
+}
+
+/* 문서 제목 */
+h2 {
+  font-size: 24px;
+  color: white;
+  margin-top: 20px;
+}
+
+/* 본문 */
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #cfcfcf;
+}
+
+/* 글리치 효과 */
+.glitch {
+  color: red;
+  font-weight: bold;
+  animation: flicker 0.2s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
 }
 </style>
 
@@ -25,13 +79,103 @@ body {
 
 <body>
 
-<h1>Arche Corporation</h1>
+<h1>ARCHIVE ACCESS SYSTEM</h1>
 
-<div class="box">[OPEN] 황무지 보고서</div>
-<div class="box">[OPEN] 생존자 기록</div>
-<div class="box locked">[LOCKED] ■■ 파일</div>
+<div class="box" onclick="showDoc('wasteland')">[매마른 행성]</div>
+<div class="box" onclick="showDoc('arche')">[아크레 코퍼레이션]</div>
+<div class="box locked" onclick="secretDoc()">[■■]</div>
 
-<p>환영합니다. 지시관.</p>
+<div id="content">문서를 선택하십시오.</div>
+
+<script>
+function showDoc(type) {
+  let content = document.getElementById("content");
+
+  if (type === "wasteland") {
+    content.innerHTML = `
+      <h2>매마른 행성</h2>
+
+      <p>
+      이 세계는 과잉된 발전 이후 붕괴된 결과물이다.<br>
+      그 중심에는 “황무지”라 불리는 광대한 붕괴 지역이 존재한다.
+      </p>
+
+      <h2>황무지</h2>
+      <p>
+      이름 그대로 흙과 모래, 그리고 변형된 생명체들로 이루어진 공간이다.<br>
+      장기간 노출될 경우 인간은 점차 생물학적 변이를 겪게 되며,<br>
+      결국 동일한 생태계의 일부로 편입된다.<br>
+      이는 수 세기 전 기술 발전의 부작용으로 추정된다.
+      </p>
+
+      <h2>영토</h2>
+      <p>
+      각 기업 및 조직이 통제하는 안정 구역이다.<br>
+      에텔먼튬으로 외곽이 봉쇄되어 있으며,<br>
+      사실상 과거 국가 단위 이상의 독립 권한을 가진다.
+      </p>
+
+      <h2>에텔먼튬</h2>
+      <p>
+      황무지의 변이를 억제하는 희귀 광물.<br>
+      안정 구역을 유지하는 핵심 자원이며,<br>
+      위험 지역의 동굴과 유적에서만 제한적으로 채굴된다.
+      </p>
+
+      <h2>유적과 동굴</h2>
+      <p>
+      유적은 과거 인류 문명의 잔재이며,<br>
+      동굴은 자연적으로 발생하는 불안정 공간이다.<br>
+      둘 다 높은 위험성과 동시에 중요한 자원을 포함한다.
+      </p>
+    `;
+  }
+
+  if (type === "arche") {
+    content.innerHTML = `
+      <h2>아크레 코퍼레이션</h2>
+
+      <p>
+      대외적으로는 용병 및 자원 회수 기업으로 알려져 있으나,<br>
+      실제로는 세계 주요 구역을 관리하는 핵심 권력 조직이다.
+      </p>
+
+      <p>
+      총 10개의 독립 팀으로 구성되어 있으며,<br>
+      각 팀은 특정 기능과 임무를 담당한다.
+      </p>
+
+      <h2>조직 구조</h2>
+
+      <p>
+      1팀: 전투 및 전선 돌파<br>
+      2팀: 탐사 및 유적 조사<br>
+      3팀: 방어 및 영토 유지<br>
+      4팀: 정보 수집 및 감시<br>
+      5팀: 기술 연구 및 장비 개발<br>
+      6팀: 황무지 생물 분석<br>
+      7팀: 자원 채굴 및 회수<br>
+      8팀: 내부 통제 및 처벌<br>
+      9팀: 외교 및 거래 담당<br>
+      10팀: 기록 보존 및 금지 정보 관리
+      </p>
+    `;
+  }
+}
+
+function secretDoc() {
+  let content = document.getElementById("content");
+
+  content.innerHTML = `
+    <h2 class="glitch">ACCESS DENIED</h2>
+    <p class="glitch">LIMITED CLEARANCE</p>
+  `;
+
+  setTimeout(() => {
+    alert("REMEMBER?");
+  }, 500);
+}
+</script>
 
 </body>
 </html>
