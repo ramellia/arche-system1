@@ -2,76 +2,218 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARCHIVE SYSTEM</title>
 
 <style>
-body {
-  background: black;
-  color: #e0e0e0;
-  font-family: monospace;
-  padding: 40px;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Consolas,monospace;
 }
 
-/* 상단 타이틀 */
-h1 {
-  font-size: 28px;
-  color: white;
-  letter-spacing: 3px;
-  margin-bottom: 30px;
+body{
+background:#090909;
+color:#ddd;
+display:flex;
+height:100vh;
+overflow:hidden;
 }
 
-/* 선택 버튼 */
-.box {
-  border: 1px solid #444;
-  padding: 15px;
-  margin: 12px 0;
-  cursor: pointer;
-  font-size: 18px;
-  transition: 0.2s;
+/* 왼쪽 메뉴 */
+
+#menu{
+
+width:260px;
+background:#111;
+border-right:1px solid #333;
+padding:25px;
+
 }
 
-.box:hover {
-  border-color: white;
-  transform: scale(1.02);
+#menu h1{
+
+font-size:22px;
+margin-bottom:25px;
+color:white;
+letter-spacing:2px;
+
 }
 
-.locked {
-  color: #ff3b3b;
+.button{
+
+width:100%;
+background:#181818;
+border:1px solid #333;
+color:#ddd;
+padding:14px;
+margin-bottom:12px;
+cursor:pointer;
+transition:.2s;
+
 }
 
-/* 내용창 */
-#content {
-  margin-top: 30px;
-  border-top: 1px solid #333;
-  padding-top: 20px;
-  min-height: 200px;
+.button:hover{
+
+background:#242424;
+border-color:#888;
+
 }
 
-/* 문서 제목 */
-h2 {
-  font-size: 24px;
-  color: white;
-  margin-top: 20px;
+.lock{
+
+color:#ff5555;
+
 }
 
-/* 본문 */
-p {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #cfcfcf;
+/* 오른쪽 */
+
+#paper{
+
+flex:1;
+background:#d7d0bf;
+color:#222;
+padding:45px;
+overflow-y:auto;
+
+box-shadow:inset 0 0 40px rgba(0,0,0,.25);
+
 }
 
-/* 글리치 효과 */
-.glitch {
-  color: red;
-  font-weight: bold;
-  animation: flicker 0.2s infinite;
+#paper h2{
+
+margin-top:25px;
+margin-bottom:10px;
+font-size:28px;
+border-bottom:2px solid #555;
+padding-bottom:6px;
+
 }
 
-@keyframes flicker {
-  0% { opacity: 1; }
-  50% { opacity: 0.3; }
-  100% { opacity: 1; }
+#paper p{
+
+line-height:1.8;
+margin-bottom:20px;
+
+}
+
+/* 제목 */
+
+.title{
+
+font-size:34px;
+margin-bottom:15px;
+
+}
+
+.small{
+
+color:#666;
+font-size:14px;
+margin-bottom:35px;
+
+}
+
+/* 기억해? */
+
+#memory{
+
+position:fixed;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
+
+font-size:60px;
+
+color:white;
+
+opacity:0;
+
+pointer-events:none;
+
+text-shadow:0 0 12px red;
+
+transition:.3s;
+
+}
+
+/* 글리치 */
+
+.glitch{
+
+animation:glitch .15s;
+
+}
+
+@keyframes glitch{
+
+0%{
+
+transform:translate(2px,-1px);
+
+}
+
+25%{
+
+transform:translate(-2px,1px);
+
+}
+
+50%{
+
+transform:translate(1px,2px);
+
+}
+
+75%{
+
+transform:translate(-1px,-2px);
+
+}
+
+100%{
+
+transform:none;
+
+}
+
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+
+body{
+    flex-direction:column;
+    height:auto;
+}
+
+#menu{
+    width:100%;
+    border-right:none;
+    border-bottom:1px solid #333;
+}
+
+#paper{
+    width:100%;
+    padding:25px;
+}
+
+.button{
+    font-size:16px;
+}
+
+.title{
+    font-size:28px;
+}
+
+h2{
+    font-size:22px;
+}
+
 }
 </style>
 
@@ -79,102 +221,326 @@ p {
 
 <body>
 
-<h1>ARCHIVE ACCESS SYSTEM</h1>
+<div id="menu">
 
-<div class="box" onclick="showDoc('wasteland')">[매마른 행성]</div>
-<div class="box" onclick="showDoc('arche')">[아크레 코퍼레이션]</div>
-<div class="box locked" onclick="secretDoc()">[■■]</div>
+<h1>ARCHIVE</h1>
 
-<div id="content">문서를 선택하십시오.</div>
+<button class="button" onclick="planet()">
+매마른 행성
+</button>
+
+<button class="button" onclick="company()">
+Arche Corporation
+</button>
+
+<button class="button lock" onclick="secret()">
+■■■■■
+</button>
+
+</div>
+
+<div id="paper">
+
+<div class="title">
+ARCHIVE ACCESS SYSTEM
+</div>
+
+<div class="small">
+
+CLEARANCE LEVEL : DIRECTOR
+
+</div>
+
+<p>
+
+왼쪽의 문서를 선택하십시오.
+
+</p>
+
+</div>
+
+<div id="memory">
+기억해?
+</div>
 
 <script>
-function showDoc(type) {
-  let content = document.getElementById("content");
 
-  if (type === "wasteland") {
-    content.innerHTML = `
-      <h2>매마른 행성</h2>
+const paper=document.getElementById("paper");
 
-      <p>
-      이 세계는 과잉된 발전 이후 붕괴된 결과물이다.<br>
-      그 중심에는 “황무지”라 불리는 광대한 붕괴 지역이 존재한다.
-      </p>
+function effect(){
 
-      <h2>황무지</h2>
-      <p>
-      이름 그대로 흙과 모래, 그리고 변형된 생명체들로 이루어진 공간이다.<br>
-      장기간 노출될 경우 인간은 점차 생물학적 변이를 겪게 되며,<br>
-      결국 동일한 생태계의 일부로 편입된다.<br>
-      이는 수 세기 전 기술 발전으로 생겨난 부작용으로 추정된다.
-      </p>
+document.body.classList.add("glitch");
 
-      <h2>영토</h2>
-      <p>
-      각 기업 및 조직이 통제하는 안정 구역이다.<br>
-      에텔먼튬으로 외곽이 봉쇄되어 있으며,<br>
-      사실상 과거 국가 단위 이상의 독립 권한을 가진다.
-      </p>
+setTimeout(()=>{
 
-      <h2>에텔먼튬</h2>
-      <p>
-      황무지의 변이를 억제하는 희귀 광물.<br>
-      안정 구역을 유지하는 핵심 자원이며,<br>
-      위험 지역의 동굴과 유적에서만 제한적으로 채굴된다.
-      </p>
+document.body.classList.remove("glitch");
 
-      <h2>유적과 동굴</h2>
-      <p>
-      유적은 과거 인류 문명의 잔재이며,<br>
-      동굴은 자연적으로 발생하는 불안정 공간이다.<br>
-      둘 다 높은 위험성과 동시에 중요한 자원을 포함한다.
-      </p>
-    `;
-  }
+},120);
 
-  if (type === "arche") {
-    content.innerHTML = `
-      <h2>아크레 코퍼레이션</h2>
-
-      <p>
-      대외적으로는 용병 및 자원 회수 기업으로 알려져 있다.<br>
-      </p>
-
-      <p>
-      총 10개의 독립 팀으로 구성되어 있으며,<br>
-      각 팀은 특정 기능과 임무를 담당한다.
-      </p>
-
-      <h2>조직 구조</h2>
-
-      <p>
-      1팀: 황무지 개척 및 돌파<br>
-      2팀: 유적 조사 및 탐사<br>
-      3팀: 에텔먼튬을 조건으로 기업 보호<br>
-      4팀: 처형 및 처단<br>
-      5팀: 기술 연구 및 장비 개발<br>
-      6팀: 언론 및 후처리<br>
-      7팀: 본사 업무 및 서류작업<br>
-      8팀: 민간 청부 및 의뢰수령<br>
-      9팀: 외교 및 거래 <br>
-      10팀: 구역 말살
-      </p>
-    `;
-  }
 }
 
-function secretDoc() {
-  let content = document.getElementById("content");
+function planet(){
 
-  content.innerHTML = `
-    <h2 class="glitch">ACCESS DENIED</h2>
-    <p class="glitch">LIMITED CLEARANCE</p>
-  `;
+effect();
 
-  setTimeout(() => {
-    alert("기억해?");
-  }, 500);
+paper.innerHTML=`
+
+<div class="title">
+
+매마른 행성
+
+</div>
+
+<div class="small">
+
+ARCHIVE FILE 01
+
+</div>
+
+<h2>황무지</h2>
+
+<p>
+
+황무지는 문명 붕괴 이후 지구 표면 대부분을 차지하게 된 오염 지역입니다. 현재 지표의 약 70% 이상이 황무지로 변했으며, 일반인은 보호 장비 없이 장시간 생존할 수 없습니다.
+과거 도시, 연구소, 군사기지, 공장 등 인류 문명의 흔적이 그대로 남아 있으며, 아직 발견되지 않은 기술과 자원도 다수 존재합니다. 그러나 대부분의 유적은 심한 오염과 이형의 서식지로 변해 있어 매우 위험합니다.
+황무지는 지역마다 환경이 크게 다릅니다. 폐허가 된 도시, 사막, 거대한 숲, 방사능 지대, 지하 시설, 붕괴된 공장지대 등 다양한 환경이 존재하며, 오염 농도와 출현하는 이형의 종류도 모두 다릅니다. 일부 지역은 현재 기술로도 접근이 불가능한 최고위험 구역으로 지정되어 있습니다.
+황무지에 오래 머무르면 이화가 진행됩니다. 초기에는 피로감과 감각 이상 정도로 시작하지만, 시간이 지날수록 신체와 정신이 변형되어 결국 인간성을 잃을 수 있습니다. 현재 이화를 완전히 치료하는 방법은 없으며, 에텔먼튬만...
+
+</p>
+
+<h2>영토</h2>
+
+<p>
+
+현재 세계는 국가 대신 거대 기업들이 각각의 영토를 통치하는 체계로 운영됩니다.
+기업은 자신이 관리하는 도시와 주변 황무지를 영토로 지정하며, 영토 내부의 치안, 자원 관리, 군사, 행정, 복지를 모두 책임집니다. 영토의 경계는 고정되어 있지 않으며, 황무지를 개척하거나 새로운 거점을 확보함으로써 점차 확장되기도 하고, 전쟁이나 이형의 습격으로 축소되기도 합니다.
+새로운 에텔먼튬 광맥이나 중요한 유적이 발견되면 여러 기업이 해당 지역의 소유권을 주장하는 경우가 많으며, 협상으로 해결되기도 하지만 무력 충돌로 이어지는 일도 드물지 않습니다.
+황무지에는 어느 기업에도 속하지 않는 미개척 지역도 광범위하게 남아 있습니다. 이곳은 누구의 보호도 받지 않는 위험 지대로, 아직 발견되지 않은 자원과 유적, 그리고 정체불명의 현상들이 잠들어 있는 미지의 영역입니다.
+
+</p>
+
+<h2>에텔먼튬</h2>
+
+<p>
+
+에텔먼튬은 황무지에서만 채굴되는 희귀 광석이자, 현재 인류 문명을 유지하는 가장 중요한 자원입니다.
+오염 물질을 중화하고 이화의 진행을 억제하는 특성을 지니고 있으며, 도시를 보호하는 에텔먼튬 돔과 각종 발전 시설, 무기, 장비의 핵심 동력원으로 사용됩니다. 또한 이형에게도 일정한 영향을 미치는 것으로 알려져 있지만, 정확한 원리는 아직 밝혀지지 않았습니다.
+매장량은 매우 적으며 대부분 위험한 황무지 깊숙한 곳에서 발견됩니다. 새로운 광맥 하나가 기업 간 외교와 전쟁의 원인이 될 정도로 가치가 높으며, 모든 채굴 구역은 철저한 경비 아래 관리됩니다.
+
+</p>
+
+<h2>유적과 동굴</h2>
+
+<p>
+
+황무지 곳곳에는 문명 붕괴 이전의 도시, 연구소, 군사기지, 발전소, 지하 시설 등이 유적으로 남아 있습니다. 대부분은 오랜 세월 동안 방치되어 붕괴되었지만, 아직도 작동하는 시설이나 미회수 기술, 기록, 장비가 발견되기도 합니다.
+유적 아래에는 자연적으로 형성된 동굴과 인공 지하 시설이 복잡하게 연결된 지역이 존재합니다. 특히 에텔먼튬 광맥은 이러한 동굴 깊숙한 곳에서 발견되는 경우가 많아 탐사와 채굴이 동시에 이루어집니다.
+그러나 대부분의 유적과 동굴에는 강력한 이형이 서식하거나 높은 오염 농도를 보이기 때문에, 전문 탐사 인원 외에는 출입이 금지되어 있습니다. 아직 지도조차 완성되지 않은 미탐사 지역도 매우 많으며, 새로운 발견이 지금도 계속 이어지고 있습니다.
+
+</p>
+
+`;
+
 }
+
+function company(){
+
+effect();
+
+paper.innerHTML=`
+
+<div class="title">
+
+Arche Corporation
+
+</div>
+
+<div class="small">
+
+ARCHIVE FILE 02
+
+</div>
+
+<h2>기업 구조</h2>
+
+<p>
+
+Arche Corporation은 현재 인류 문명을 유지하는 핵심 기업 중 하나입니다.
+
+기업은 단순한 회사가 아니라 행정, 군사, 치안, 연구, 산업을 모두 담당하는 하나의 국가입니다.
+
+본사는 지상 50층, 지하 50층 규모로 이루어져 있으며, 총 10개의 전문 부대가 각각의 임무를 수행합니다.
+
+최고 권한자는 지시관이며, 모든 부대는 지시관의 명령을 최우선으로 따릅니다.
+
+각 부대는 독립적인 권한을 가지고 있지만, 하나의 목표를 위해 협력합니다.
+
+</p>
+
+<h2>10개 부대</h2>
+
+<p>
+
+Arche Corporation은 총 10개의 부대로 구성됩니다.
+
+제1부대 - 개척부대 황무지를 개척하고 새로운 안전 구역을 확보합니다.
+
+제2부대 - 탐사부대 유적을 조사하고 기술과 자원을 회수합니다.
+
+제3부대 - 보호부대 광산과 기업 시설을 방어하며 전투를 담당합니다.
+
+제4부대 - 처형부대 반역자 및 최고 위험 대상을 처리합니다.
+
+제5부대 - 기술개발부대 무기와 장비를 연구·개발합니다.
+
+제6부대 - 후처리부대 사건 은폐, 기록 관리, 언론 대응을 담당합니다.
+
+제7부대 - 본부운영부대 행정, 계약, 회계, 인사를 담당합니다.
+
+제8부대 - 청부부대 의뢰 해결, 경호, 구조 임무를 수행합니다.
+
+제9부대 - 기업대응부대 다른 기업과 협상하고 분쟁을 해결합니다.
+
+제10부대 - 말살부대 최고 위험 지역을 완전 제거하는 최종 대응 부대입니다.
+
+
+
+</p>
+
+<h2>지시관 권한</h2>
+
+<p>
+
+지시관은 모든 부대를 직접 지휘할 수 있습니다.
+
+작전 승인, 인원 배치, 기업 외교, 도시 운영 등 모든 최종 결정은 지시관의 권한입니다.
+
+필요하다면 여러 부대를 동시에 투입할 수도 있습니다.
+
+단, 현장 전문성은 각 부대 팀장이 가장 뛰어나므로, 의견을 듣는 것이 권장됩니다.
+
+
+</p>
+
+<h2>도시 생활</h2>
+
+<p>
+
+시민 대부분은 평생 황무지를 직접 보지 못합니다.
+
+교육, 의료, 치안, 식량, 주거는 모두 기업이 관리합니다.
+
+도시는 에텔먼튬 돔으로 보호되고 있으며, 일반 시민의 황무지 출입은 금지되어 있습니다.
+
+시민들에게 기업은 정부이자 군대이며 경찰입니다.
+
+
+</p>
+
+<h2>황무지 출입</h2>
+
+<p>
+
+황무지는 허가받은 인원만 출입 가능합니다.
+
+출입 전에는 반드시 장비 점검과 이화 검사를 실시합니다.
+
+작전 종료 후에도 검사가 진행됩니다.
+
+오염 농도가 높은 지역에서는 장시간 체류가 금지됩니다.
+
+
+</p>
+
+<h2>기업 관계</h2>
+
+<p>
+
+Arche Corporation은 다른 기업과 협력하기도 하고 경쟁하기도 합니다.
+
+필요하다면 공동 작전을 실시하지만, 도시의 안전이 위협받으면 언제든 무력 대응으로 전환됩니다.
+
+기업 간 계약은 제9부대가 담당합니다.
+
+</p>
+
+<h2>비상 상황</h2>
+
+<p>
+
+비상 상황
+
+다음 상황에서는 즉시 본부에 보고하십시오.
+
+새로운 이형 발견
+
+미확인 유적 발견
+
+에텔먼튬 이상 반응
+
+도시 외곽 돔 이상
+
+직원 이화 증상
+
+통신 두절
+
+독단적인 행동은 금지됩니다.
+
+</p>
+
+<h2>지시관에게</h2>
+
+<p>
+
+지시관에게
+
+[삭재됨]
+기억해줘.
+
+</p>
+
+`;
+
+}
+
+function secret(){
+
+effect();
+
+paper.innerHTML=`
+
+<div class="title" style="color:red">
+
+ACCESS DENIED
+
+</div>
+
+<p>
+
+CURRENT USER HAS NO PERMISSION.
+
+</p>
+
+`;
+
+const m=document.getElementById("memory");
+
+setTimeout(()=>{
+
+m.style.opacity="1";
+
+},250);
+
+setTimeout(()=>{
+
+m.style.opacity="0";
+
+},1400);
+
+}
+
 </script>
 
 </body>
+
 </html>
